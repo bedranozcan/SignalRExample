@@ -1,8 +1,10 @@
+using SignalRExample.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,8 +22,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<OrderHub>("/orderhub");
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Order}/{action=Index}/{id?}");
+
+});
 
 app.Run();
